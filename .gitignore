@@ -1,0 +1,4 @@
+.zsh_history
+.zcompdump
+*.zsh.zwc
+*.zsh-theme.zwc
