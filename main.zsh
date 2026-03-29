@@ -16,36 +16,81 @@ zsource() {
   source "$file"
 }
 
-# general settings
 export ZSH=$(readlink -f $DOT_FILES_PATH/zsh)
+
+# Env (paths, etc …)
+zsource "${ZSH}/env.zsh"
+
+# general settings
+# History
 export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
-
-# Env (paths, etc …)
-zsource $ZSH/env.zsh
-
-
+setopt hist_ignore_all_dups
+setopt hist_find_no_dups
+setopt hist_verify          # show previous command from history before executing
+# Directories
+# https://zsh.sourceforge.io/Intro/intro_6.html
+DIRSTACKSIZE=8
+setopt cd_silent            # do not print path on cd (already print by Agnoster theme)
+setopt auto_cd              # got to path without using cd
+setopt auto_pushd           # Add to directory stack witout using pushd command
+setopt pushd_silent         # keeps the shell from printing the directory stack each time we do a cd
+setopt pushd_ignore_dups    # ignore similar paths
+setopt pushdminus           # swapped the meaning of cd +1 and cd -1
 
 # Keyboard shortcuts or overides
 # https://www.justus.pw/posts/2023-03-10-useful-zsh-shortcuts.html
 # use `bindkey -e` to restore temporaly Emacs keybindings
 
-
-
 # Theme
-zsource $ZSH/themes/minimal-falcon.zsh-theme
+# Minimal
+# zsource "${ZSH}/themes/minimal.zsh-theme"
+
+# Agnoster
+zsource "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
+
+# Spaceship
+# https://spaceship-prompt.sh/config/intro/#Configure-your-prompt
+# zsource $ZSH/themes/spaceship-prompt/spaceship.zsh-theme
+
+# Typewritter
+# fpath+=$ZSH/themes/typewritten
+# autoload -U promptinit; promptinit
+# prompt typewritten
+
+#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
 
 # Plugins
+zsource <(fzf --zsh)
+zsource "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+zsource "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
+# Prepend plugin paths to fpath so that custom and plugin completions take precedence,
+# then append the existing $fpath and user completions at the end.
+fpath=(
+  "${ZSH}/plugins/zsh-completions/src"
+  "${ZSH}/plugins/git-completions"
+  $fpath
+  "${ZSH}/functions"
+)
 
 autoload -Uz compinit
 ZSH_COMPDUMP="${ZSH}/.zcompdump"
 compinit -C -d "$ZSH_COMPDUMP"
 
+# Autoload user functions
+if [[ -d "${ZSH}/functions" ]]; then
+  autoload -Uz ${ZSH}/functions/*(N:t)
+fi
+
+# iTerm shell integration
+if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
+  test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+fi
+
 # Profile (alias, etc)
-zsource $ZSH/aliases.zsh
+source "${ZSH}/aliases.zsh"
 
 # Profiling end
 if [ $PROFILING_MODE -ne 0 ]; then

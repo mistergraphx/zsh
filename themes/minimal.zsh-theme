@@ -25,11 +25,23 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 ,border:#36363a'\
 "
 
+# Color variables for prompt
+COLOR_DIR=245
+COLOR_GIT=173
+COLOR_ARROW=180
+
 # prompt
 function git_prompt() {
   git rev-parse --is-inside-work-tree &>/dev/null || return
   ref=$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always)
-  echo "%F{173}($ref)%f"
+  status_icon=""
+  if [[ -n $(git status -s) ]]; then
+    status_icon="*"
+    git_color=173  # orange for modified
+  else
+    git_color=2    # green for clean
+  fi
+  echo "%F{$git_color}($ref)$status_icon%f"
 }
 setopt PROMPT_SUBST
-PROMPT='%F{245}%1~%f$(git_prompt) %F{180}❯%f '
+PROMPT="%F{$COLOR_DIR}%1~%f\$(git_prompt) %F{$COLOR_ARROW}❯%f "

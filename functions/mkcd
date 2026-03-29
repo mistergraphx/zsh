@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+# Create a directory and change into it
+# Usage: mkcd my-new-directory
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: mkcd <directory-name>"
+    return 1
+fi
+
+mkdir -p "$1" && cd "$1"
