@@ -23,21 +23,23 @@ zsource "${ZSH}/env.zsh"
 
 # general settings
 # History
+# https://catonmat.net/the-definitive-guide-to-bash-command-line-history
 export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
+export HISTIGNORE="&:[ ]*:exit" # ignore duplicate commands, commands that begin with a space, and the 'exit' command
 setopt hist_ignore_all_dups
 setopt hist_find_no_dups
-setopt hist_verify          # show previous command from history before executing
+setopt hist_verify              # show previous command from history before executing
 # Directories
 # https://zsh.sourceforge.io/Intro/intro_6.html
 DIRSTACKSIZE=8
-setopt cd_silent            # do not print path on cd (already print by Agnoster theme)
-setopt auto_cd              # got to path without using cd
-setopt auto_pushd           # Add to directory stack witout using pushd command
-setopt pushd_silent         # keeps the shell from printing the directory stack each time we do a cd
-setopt pushd_ignore_dups    # ignore similar paths
-setopt pushdminus           # swapped the meaning of cd +1 and cd -1
+setopt cd_silent                # do not print path on cd (already print by Agnoster theme)
+setopt auto_cd                  # got to path without using cd
+setopt auto_pushd               # Add to directory stack witout using pushd command
+setopt pushd_silent             # keeps the shell from printing the directory stack each time we do a cd
+setopt pushd_ignore_dups        # ignore similar paths
+setopt pushdminus               # swapped the meaning of cd +1 and cd -1
 
 # Keyboard shortcuts or overides
 # https://www.justus.pw/posts/2023-03-10-useful-zsh-shortcuts.html
@@ -47,14 +49,16 @@ setopt pushdminus           # swapped the meaning of cd +1 and cd -1
 # Minimal
 # zsource "${ZSH}/themes/minimal.zsh-theme"
 
-# Agnoster
+# Agnoster (from github original repo !oh-my-zsh)
+# fix: double quote prompt break on MacOS
+# fix: iterm don't render powerline unicode signs (force LC_LOCAL)
 zsource "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 
 # Spaceship
 # https://spaceship-prompt.sh/config/intro/#Configure-your-prompt
 # zsource $ZSH/themes/spaceship-prompt/spaceship.zsh-theme
 
-# Typewritter
+# Typewritten
 # fpath+=$ZSH/themes/typewritten
 # autoload -U promptinit; promptinit
 # prompt typewritten
@@ -65,6 +69,10 @@ zsource "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 zsource <(fzf --zsh)
 zsource "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
 zsource "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+export NVM_AUTO_USE=false    # change or install node version using .nvmrc files from projects paths
+export NVM_COMPLETION=true
+export NVM_LAZY_LOAD=true
+zsource "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
 zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
 # Prepend plugin paths to fpath so that custom and plugin completions take precedence,
 # then append the existing $fpath and user completions at the end.
@@ -90,7 +98,7 @@ if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
 fi
 
 # Profile (alias, etc)
-source "${ZSH}/aliases.zsh"
+zsource "${ZSH}/aliases.zsh"
 
 # Profiling end
 if [ $PROFILING_MODE -ne 0 ]; then

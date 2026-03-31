@@ -1,4 +1,8 @@
-# ZSH perf
+# ZSH test perf
+
+
+https://santacloud.dev/posts/optimizing-zsh-startup-performance/#initial-zsh-config
+
 
 ## oh-myzsh
 
@@ -28,6 +32,8 @@ num  calls                time                       self            name
 
 ---- 
 
+
+
 ## Zsh only
 
 Shell init time: 38 ms (first start) 32ms (second start)
@@ -54,13 +60,20 @@ num  calls                time                       self            name
 -----------------------------------------------------------------------------------
 
  2)    2           0.39     0.19    2.01%      0.39     0.19    2.01%  zsource
-````
+```
 
 **Shell init time: 58 ms**
 
-
 ----
 
+## Plugins 
+
+- fzf
+- zsh-autosuggestions
+- fast-syntax-highlighting
+- zsh-completion
+- git-completion
+- zsh-nvm
 
 ## ZSH + fzf,auto-completion + theme spaceship
 
@@ -143,6 +156,86 @@ num  calls                time                       self            name
 
 **Shell init time: 202 ms (first run) 108ms**
 
+## with NVM + completion 
+
+### nvm installed 
+
+
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1         981,05   981,05   88,47%    434,36   434,36   39,17%  nvm_auto
+ 2)    1         251,84   251,84   22,71%    251,72   251,72   22,70%  nvm_die_on_prefix
+ 3)    2         546,69   273,34   49,30%    185,62    92,81   16,74%  nvm
+ 4)    1         109,11   109,11    9,84%     98,48    98,48    8,88%  nvm_ensure_version_installed
+ 5)    2          77,23    38,61    6,96%     41,70    20,85    3,76%  compinit
+ 6)    6          44,26     7,38    3,99%     35,57     5,93    3,21%  zsource
+ 7)    2          35,53    17,77    3,20%     35,53    17,77    3,20%  compaudit
+ 8)    1          10,63    10,63    0,96%     10,63    10,63    0,96%  nvm_is_version_installed
+ 9)    1           6,04     6,04    0,54%      6,04     6,04    0,54%  nvm_supports_source_options
+10)    1           5,01     5,01    0,45%      5,01     5,01    0,45%  _zsh_highlight_bind_widgets
+11)    1           2,73     2,73    0,25%      2,60     2,60    0,23%  prompt_agnoster_setup
+12)    1           0,33     0,33    0,03%      0,33     0,33    0,03%  is-at-least
+13)    3           0,32     0,11    0,03%      0,32     0,11    0,03%  add-zsh-hook
+14)    2           0,30     0,15    0,03%      0,30     0,15    0,03%  (anon)
+15)    2           0,24     0,12    0,02%      0,24     0,12    0,02%  nvm_has
+16)    1           0,14     0,14    0,01%      0,14     0,14    0,01%  -fast-highlight-fill-option-variables
+17)    1           0,10     0,10    0,01%      0,10     0,10    0,01%  compdef
+18)    1           0,19     0,19    0,02%      0,09     0,09    0,01%  complete
+19)    1         987,18   987,18   89,02%      0,09     0,09    0,01%  nvm_process_parameters
+20)    1           0,03     0,03    0,00%      0,03     0,03    0,00%  bashcompinit
+21)    1           0,02     0,02    0,00%      0,02     0,02    0,00%  nvm_is_zsh
+```
+
+**Shell init time: 1217 ms**
+
+### zsh-nvm
+
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1         905,97   905,97   44,88%    905,18   905,18   44,84%  nvm_die_on_prefix
+ 2)    1        1794,14  1794,14   88,88%    462,48   462,48   22,91%  nvm_auto
+ 3)    2        1331,66   665,83   65,97%    314,48   157,24   15,58%  nvm
+ 4)    7        1992,01   284,57   98,68%     99,72    14,25    4,94%  zsource
+ 5)    1         110,02   110,02    5,45%     98,27    98,27    4,87%  nvm_ensure_version_installed
+ 6)    1        1880,50  1880,50   93,16%     67,08    67,08    3,32%  _zsh_nvm_load
+ 7)    1          26,61    26,61    1,32%     26,61    26,61    1,32%  compinit
+ 8)    1          11,75    11,75    0,58%     11,75    11,75    0,58%  nvm_is_version_installed
+ 9)    1          11,61    11,61    0,58%     11,61    11,61    0,58%  nvm_supports_source_options
+10)    1           7,57     7,57    0,37%      7,57     7,57    0,37%  _zsh_nvm_rename_function
+11)    1           5,73     5,73    0,28%      5,73     5,73    0,28%  _zsh_highlight_bind_widgets
+12)    1           3,08     3,08    0,15%      2,97     2,97    0,15%  prompt_agnoster_setup
+13)    1           2,37     2,37    0,12%      2,37     2,37    0,12%  is-at-least
+14)    2           1,98     0,99    0,10%      1,98     0,99    0,10%  nvm_has
+15)    3           0,34     0,11    0,02%      0,34     0,11    0,02%  add-zsh-hook
+16)    2           0,29     0,14    0,01%      0,29     0,14    0,01%  (anon)
+17)    1           0,11     0,11    0,01%      0,11     0,11    0,01%  -fast-highlight-fill-option-variables
+18)    1        1805,84  1805,84   89,46%      0,09     0,09    0,00%  nvm_process_parameters
+19)    1           0,02     0,02    0,00%      0,02     0,02    0,00%  nvm_is_zsh
+```
+
+**Shell init time: 2062 ms (first run)**
+**Shell init time: 1152 ms**
+
+### zsh-nvm with lazyload
+
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1         174,97   174,97   72,71%    174,85   174,85   72,66%  _zsh_nvm_lazy_load
+ 2)    7         219,41    31,34   91,17%     35,12     5,02   14,60%  zsource
+ 3)    1          21,24    21,24    8,83%     21,24    21,24    8,83%  compinit
+ 4)    1           5,92     5,92    2,46%      5,92     5,92    2,46%  _zsh_highlight_bind_widgets
+ 5)    1           2,46     2,46    1,02%      2,32     2,32    0,97%  prompt_agnoster_setup
+ 6)    1           0,34     0,34    0,14%      0,34     0,34    0,14%  is-at-least
+ 7)    3           0,34     0,11    0,14%      0,34     0,11    0,14%  add-zsh-hook
+ 8)    2           0,32     0,16    0,13%      0,32     0,16    0,13%  (anon)
+ 9)    1           0,12     0,12    0,05%      0,12     0,12    0,05%  _zsh_nvm_has
+10)    1           0,08     0,08    0,03%      0,08     0,08    0,03%  -fast-highlight-fill-option-variables
+```
+
+**Shell init time: 276 ms**
 
 
 
