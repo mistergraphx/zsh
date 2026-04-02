@@ -2,6 +2,7 @@
 
 # Profiling start
 if [ $PROFILING_MODE -ne 0 ]; then
+    # setopt SOURCE_TRACE
     zmodload zsh/zprof
     zsh_start_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
 fi
