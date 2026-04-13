@@ -17,7 +17,8 @@ zsource() {
   source "$file"
 }
 
-export ZSH=$(readlink -f $DOT_FILES_PATH/zsh)
+# If ZSH is not defined, use the current script's directory.
+[[ -n "$ZSH" ]] || export ZSH="${${(%):-%x}:a:h}"
 
 # Env (paths, etc …)
 zsource "${ZSH}/env.zsh"
@@ -29,9 +30,13 @@ export HISTFILE=$ZSH/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
 export HISTIGNORE="&:[ ]*:exit" # ignore duplicate commands, commands that begin with a space, and the 'exit' command
-setopt hist_ignore_all_dups
+setopt hist_expire_dups_first   # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_all_dups     # ignore duplicated commands history list
 setopt hist_find_no_dups
+setopt hist_ignore_space        # ignore commands that start with space
 setopt hist_verify              # show previous command from history before executing
+setopt share_history            # share command history data
+
 # Directories
 # https://zsh.sourceforge.io/Intro/intro_6.html
 DIRSTACKSIZE=8
@@ -41,6 +46,12 @@ setopt auto_pushd               # Add to directory stack witout using pushd comm
 setopt pushd_silent             # keeps the shell from printing the directory stack each time we do a cd
 setopt pushd_ignore_dups        # ignore similar paths
 setopt pushdminus               # swapped the meaning of cd +1 and cd -1
+
+# Load prompt utilities/
+# > prompt -a                   # list all available prompts
+# https://github.com/rothgar/mastering-zsh/blob/master/docs/config/prompt.md
+autoload -Uz promptinit; promptinit
+setopt promptsubst               # allow prompt substitution like $(build_prompt) in Agnoster, if it's not defined in the theme
 
 # Keyboard shortcuts or overides
 # https://www.justus.pw/posts/2023-03-10-useful-zsh-shortcuts.html
@@ -54,6 +65,10 @@ setopt pushdminus               # swapped the meaning of cd +1 and cd -1
 # fix: double quote prompt break on MacOS
 # fix: iterm don't render powerline unicode signs (force LC_LOCAL)
 zsource "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
+
+# https://github.com/ZYSzys/zys-zsh-theme
+# 🌈 A ZSH theme similar with agnoster-zsh-theme.
+# zsource "${ZSH}/themes/zys-zsh-theme/zys.zsh-theme"
 
 # Spaceship
 # https://spaceship-prompt.sh/config/intro/#Configure-your-prompt
