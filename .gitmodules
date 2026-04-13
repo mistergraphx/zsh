@@ -19,3 +19,6 @@
 [submodule "plugins/zsh-nvm"]
 	path = plugins/zsh-nvm
 	url = https://github.com/lukechilds/zsh-nvm.git
+[submodule "themes/zys-zsh-theme"]
+	path = themes/zys-zsh-theme
+	url = https://github.com/ZYSzys/zys-zsh-theme.git
