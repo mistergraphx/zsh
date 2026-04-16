@@ -1,5 +1,16 @@
 # ZSH test perf
 
+zshrc 
+
+```bash
+# Profiling
+# use this for profiling in case the shell becomes slow
+export PROFILING_MODE=1
+
+source $HOME/you/path/to/zsh/main.zsh
+```
+
+
 
 https://santacloud.dev/posts/optimizing-zsh-startup-performance/#initial-zsh-config
 
