@@ -248,5 +248,31 @@ num  calls                time                       self            name
 
 **Shell init time: 276 ms**
 
+### (latest) Without Zsource function
 
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1         160.91   160.91   66.37%    160.75   160.75   66.30%  _zsh_nvm_lazy_load
+ 2)    2          67.88    33.94   28.00%     37.90    18.95   15.63%  compinit
+ 3)    2          29.98    14.99   12.37%     29.98    14.99   12.37%  compaudit
+ 4)    1           5.80     5.80    2.39%      5.80     5.80    2.39%  _zsh_highlight_bind_widgets
+ 5)    2           3.00     1.50    1.24%      3.00     1.50    1.24%  promptinit
+ 6)    1           2.16     2.16    0.89%      1.91     1.91    0.79%  prompt_agnoster_setup
+ 7)    1          49.39    49.39   20.37%      1.48     1.48    0.61%  _zsh_nvm_completion
+ 8)    3           0.48     0.16    0.20%      0.48     0.16    0.20%  add-zsh-hook
+ 9)    1           0.31     0.31    0.13%      0.31     0.31    0.13%  is-at-least
+10)    1           0.25     0.25    0.10%      0.25     0.25    0.10%  (anon) [/Users/macbook/Sites/bin/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh:460]
+11)    1           0.16     0.16    0.06%      0.16     0.16    0.06%  _zsh_nvm_has
+12)    1           0.15     0.15    0.06%      0.15     0.15    0.06%  compdef
+13)    1           0.25     0.25    0.10%      0.09     0.09    0.04%  complete
+14)    1           0.07     0.07    0.03%      0.07     0.07    0.03%  -fast-highlight-fill-option-variables
+15)    1           0.05     0.05    0.02%      0.05     0.05    0.02%  (anon) [/Users/macbook/Sites/bin/zsh/plugins/fast-syntax-highlighting/fast-highlight:35]
+16)    1           0.03     0.03    0.01%      0.03     0.03    0.01%  bashcompinit
+17)    1           0.02     0.02    0.01%      0.02     0.02    0.01%  (anon) [/Users/macbook/Sites/bin/zsh/themes/agnoster-zsh-theme/agnoster.zsh-theme:51]
 
+-----------------------------------------------------------------------------------
+```
+
+**Shell init time: 1066 ms (first run)**
+**Shell init time: 375 ms**

@@ -76,8 +76,8 @@ setopt promptsubst               # allow prompt substitution like $(build_prompt
 # zsource "${ZSH}/themes/minimal.zsh-theme"
 
 # Agnoster (from github original repo !oh-my-zsh)
-# fix: double quote prompt break on MacOS
-# fix: iterm don't render powerline unicode signs (force LC_LOCAL)
+# ~~fix: double quote prompt break on MacOS~~
+# ~~fix: iterm don't render powerline unicode signs (force LC_LOCAL)~~
 source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 
 # https://github.com/ZYSzys/zys-zsh-theme
