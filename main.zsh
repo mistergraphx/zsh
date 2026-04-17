@@ -102,8 +102,6 @@ export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
 
-# zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
-
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
@@ -113,7 +111,6 @@ fi
 # then append the existing $fpath and user completions at the end.
 fpath=(
   "${ZSH}/plugins/zsh-completions/src"
-  # "${ZSH}/plugins/git-completions"
   $fpath
   "${ZSH}/functions"
 )
