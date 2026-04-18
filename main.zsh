@@ -2,9 +2,10 @@
 
 # Profiling start
 if [ $PROFILING_MODE -ne 0 ]; then
-    # setopt SOURCE_TRACE
-    zmodload zsh/zprof
-    zsh_start_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
+  # setopt SOURCE_TRACE
+  zmodload zsh/zprof
+  zmodload zsh/datetime
+  zsh_start_time=$EPOCHREALTIME
 fi
 
 # compile zsh file, and source them - first run is slower
@@ -132,6 +133,6 @@ source "${ZSH}/aliases.zsh"
 # Profiling end
 if [ $PROFILING_MODE -ne 0 ]; then
   zprof
-  zsh_end_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
-  echo "Shell init time: $((zsh_end_time - zsh_start_time)) ms"
+  zsh_end_time=$EPOCHREALTIME
+  echo "Shell init time: $(printf "%.0f" $(( (zsh_end_time - zsh_start_time) * 1000 ))) ms"
 fi
