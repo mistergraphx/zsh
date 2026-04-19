@@ -102,7 +102,7 @@ export NVM_AUTO_USE=false    # change or install node version using .nvmrc files
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
-
+source "${ZSH}/plugins/git-completions/git-completion.bash"
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
@@ -112,6 +112,7 @@ fi
 # then append the existing $fpath and user completions at the end.
 fpath=(
   "${ZSH}/plugins/zsh-completions/src"
+  "${ZSH}/plugins/git-completions"
   $fpath
   "${ZSH}/functions"
 )
@@ -120,6 +121,8 @@ autoload -Uz compaudit compinit zrecompile
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
+zstyle ':completion:*:*:git:*' script $ZSH/git-completions/git-completion.bash
+
 compinit -C -d "$ZSH_COMPDUMP"
 
 # iTerm shell integration
