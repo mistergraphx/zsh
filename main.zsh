@@ -21,7 +21,6 @@ zsource() {
 # If ZSH is not defined, use the current script's directory.
 [[ -n "$ZSH" ]] || export ZSH="${${(%):-%x}:a:h}"
 
-
 # Set ZSH_CACHE_DIR to the path where cache files should be created
 # or else we will use the default cache/
 [[ -n "$ZSH_CACHE_DIR" ]] || ZSH_CACHE_DIR="$ZSH/.cache"
@@ -65,7 +64,8 @@ setopt pushdminus               # swapped the meaning of cd +1 and cd -1
 # Load prompt utilities/
 # > prompt -a                   # list all available prompts
 # https://github.com/rothgar/mastering-zsh/blob/master/docs/config/prompt.md
-autoload -Uz promptinit; promptinit
+autoload -Uz promptinit
+promptinit
 setopt promptsubst               # allow prompt substitution like $(build_prompt) in Agnoster, if it's not defined in the theme
 
 # Keyboard shortcuts or overides
@@ -102,7 +102,8 @@ export NVM_AUTO_USE=false    # change or install node version using .nvmrc files
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
-source "${ZSH}/plugins/git-completions/git-completion.bash"
+# source "${ZSH}/plugins/git-completions/git-completion.zsh"
+# zsh/plugins/git-completions/git-completion.zsh
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
@@ -121,7 +122,7 @@ autoload -Uz compaudit compinit zrecompile
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
-zstyle ':completion:*:*:git:*' script $ZSH/git-completions/git-completion.bash
+zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
 
 compinit -C -d "$ZSH_COMPDUMP"
 
