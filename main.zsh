@@ -128,7 +128,7 @@ zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completio
 autoload -Uz compinit zrecompile
 
 if [[ ! -f $ZSH_COMPDUMP || -s $ZSH_COMPDUMP(#qN.mh+24) ]];then
-  echo "Init and compil"
+  # echo "Init and compil"
   compinit -i -d $ZSH_COMPDUMP
   zcompile $ZSH_COMPDUMP
 else
