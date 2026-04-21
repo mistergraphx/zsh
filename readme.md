@@ -252,7 +252,7 @@ num  calls                time                       self            name
 
 **Shell init time: 276 ms**
 
-### (latest) Without Zsource function
+### All plugins without using Zsource function
 
 ```bash
 num  calls                time                       self            name
@@ -280,3 +280,32 @@ num  calls                time                       self            name
 
 **Shell init time: 1066 ms (first run)**
 **Shell init time: 375 ms**
+
+### Build compdump only each days and use zcompile 
+
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    2        1273,55   636,78   87,17%    814,68   407,34   55,76%  compinit
+ 2)    1         247,15   247,15   16,92%    247,15   247,15   16,92%  compdump
+ 3)    1         172,04   172,04   11,78%    171,93   171,93   11,77%  _zsh_nvm_lazy_load
+ 4)  963         154,89     0,16   10,60%    154,89     0,16   10,60%  compdef
+ 5)    4          56,94    14,23    3,90%     56,94    14,23    3,90%  compaudit
+ 6)    1           6,26     6,26    0,43%      6,26     6,26    0,43%  _zsh_highlight_bind_widgets
+ 7)    2           2,94     1,47    0,20%      2,94     1,47    0,20%  promptinit
+ 8)    1           2,37     2,37    0,16%      2,26     2,26    0,15%  prompt_agnoster_setup
+ 9)    1          44,95    44,95    3,08%      1,67     1,67    0,11%  _zsh_nvm_completion
+10)    3           1,09     0,36    0,07%      1,09     0,36    0,07%  (anon)
+11)    1           0,58     0,58    0,04%      0,58     0,58    0,04%  is-at-least
+12)    3           0,33     0,11    0,02%      0,33     0,11    0,02%  add-zsh-hook
+13)    1           0,12     0,12    0,01%      0,12     0,12    0,01%  _zsh_nvm_has
+14)    1           0,21     0,21    0,01%      0,10     0,10    0,01%  complete
+15)    1           0,07     0,07    0,00%      0,07     0,07    0,00%  -fast-highlight-fill-option-variables
+16)    1           0,03     0,03    0,00%      0,03     0,03    0,00%  bashcompinit
+
+-----------------------------------------------------------------------------------
+
+**Shell init time: 1571 ms** (first launch)
+**Shell init time: 377 ms** (other sessions)
+
+> switching between term apps rebuild compdump, using zcompil switching between apps seems to be improved (~800ms), new sessions remains the same (370ms)
+
