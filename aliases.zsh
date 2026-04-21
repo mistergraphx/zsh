@@ -1,5 +1,10 @@
 # ALIASES
 
+# ask user validation before
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
 # Android emulator
 alias emulator="$HOME/Library/Android/sdk/emulator/emulator"
 
