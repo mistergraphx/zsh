@@ -1,4 +1,5 @@
 # https://santacloud.dev/posts/optimizing-zsh-startup-performance/#initial-zsh-config
+# https://www.youtube.com/watch?v=bTLYiNvRIVI
 
 # Profiling start
 if [ $PROFILING_MODE -ne 0 ]; then
@@ -64,7 +65,7 @@ setopt promptsubst               # allow prompt substitution like $(build_prompt
 
 # Theme
 # Minimal
-# zsource "${ZSH}/themes/minimal.zsh-theme"
+# source "${ZSH}/themes/minimal.zsh-theme"
 
 # Agnoster (from github original repo !oh-my-zsh)
 # ~~fix: double quote prompt break on MacOS~~
@@ -73,11 +74,11 @@ source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 
 # https://github.com/ZYSzys/zys-zsh-theme
 # 🌈 A ZSH theme similar with agnoster-zsh-theme.
-# zsource "${ZSH}/themes/zys-zsh-theme/zys.zsh-theme"
+# source "${ZSH}/themes/zys-zsh-theme/zys.zsh-theme"
 
 # Spaceship
 # https://spaceship-prompt.sh/config/intro/#Configure-your-prompt
-# zsource $ZSH/themes/spaceship-prompt/spaceship.zsh-theme
+# source $ZSH/themes/spaceship-prompt/spaceship.zsh-theme
 
 # Typewritten
 # fpath+=$ZSH/themes/typewritten
@@ -107,12 +108,10 @@ fpath=(
   "${ZSH}/functions"
 )
 
-autoload -Uz compinit
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
+# Completion
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
-zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
-
 
 setopt menu_complete  # Automatically highlight first element of completion menu
 setopt list_packed    # The completion menu takes less space
@@ -123,8 +122,19 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' file-sort modification
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# git completion
+zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
 
-compinit -C -d "$ZSH_COMPDUMP"
+autoload -Uz compinit zrecompile
+
+if [[ ! -f $ZSH_COMPDUMP || -s $ZSH_COMPDUMP(#qN.mh+24) ]];then
+  # echo "Init and compil"
+  compinit -i -d $ZSH_COMPDUMP
+  zcompile $ZSH_COMPDUMP
+else
+  echo "Loaded from cache"
+  compinit -C
+fi
 
 # iTerm shell integration
 if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then

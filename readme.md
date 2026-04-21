@@ -11,9 +11,13 @@ source $HOME/you/path/to/zsh/main.zsh
 ```
 
 
+**Sources**
 
-https://santacloud.dev/posts/optimizing-zsh-startup-performance/#initial-zsh-config
+* https://zsh.sourceforge.io/Doc/Release/Options.html
+* https://santacloud.dev/posts/optimizing-zsh-startup-performance/#initial-zsh-config
+* https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
 
+----
 
 ## oh-myzsh
 
