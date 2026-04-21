@@ -8,16 +8,6 @@ if [ $PROFILING_MODE -ne 0 ]; then
   zsh_start_time=$EPOCHREALTIME
 fi
 
-# compile zsh file, and source them - first run is slower
-zsource() {
-  local file=$1
-  local zwc="${file}.zwc"
-  if [[ -f "$file" && (! -f "$zwc" || "$file" -nt "$file") ]]; then
-    zcompile "$file"
-  fi
-  source "$file"
-}
-
 # If ZSH is not defined, use the current script's directory.
 [[ -n "$ZSH" ]] || export ZSH="${${(%):-%x}:a:h}"
 
@@ -102,8 +92,7 @@ export NVM_AUTO_USE=false    # change or install node version using .nvmrc files
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
-# source "${ZSH}/plugins/git-completions/git-completion.zsh"
-# zsh/plugins/git-completions/git-completion.zsh
+
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
@@ -118,11 +107,22 @@ fpath=(
   "${ZSH}/functions"
 )
 
-autoload -Uz compaudit compinit zrecompile
+autoload -Uz compinit
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
 zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
+
+
+setopt menu_complete  # Automatically highlight first element of completion menu
+setopt list_packed    # The completion menu takes less space
+
+# Highlights menu selection
+zstyle ':completion:*' menu select
+# Sort by modification date for every completer
+zstyle ':completion:*' file-sort modification
+# Case insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 compinit -C -d "$ZSH_COMPDUMP"
 
