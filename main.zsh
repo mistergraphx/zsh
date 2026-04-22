@@ -21,7 +21,7 @@ fi
 #   ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
 # fi
 # echo $ZSH_CACHE_DIR
-# Create cache and completions dir and add to $fpath
+# Create cache dir and add to $fpath
 mkdir -p "$ZSH_CACHE_DIR"
 (( ${fpath[(Ie)$ZSH_CACHE_DIR]} )) || fpath=("$ZSH_CACHE_DIR" $fpath)
 
@@ -89,11 +89,34 @@ source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 source <(fzf --zsh)
 source "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+# export NVM_AUTO_USE=false    # change or install node version using .nvmrc files from projects paths
+# export NVM_COMPLETION=true
+# export NVM_LAZY_LOAD=true
+# source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
+
 # use functions to lazyload node & nvm: https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
-export NVM_AUTO_USE=false    # change or install node version using .nvmrc files from projects paths
-export NVM_COMPLETION=true
-export NVM_LAZY_LOAD=true
-source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
+
+#  virtual machine management
+nvm() {
+    unfunction $0
+    export NVM_DIR=~/.nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+    nvm "$@"
+}
+
+node() {
+    unfunction $0
+    export NVM_DIR=~/.nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+    node "$@"
+}
+
+npm() {
+    unfunction $0
+    export NVM_DIR=~/.nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+    npm "$@"
+}
 
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
@@ -110,8 +133,9 @@ fpath=(
 )
 
 # Completion
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#b4b4b9"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_STRATEGY=(completion history)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
 
 setopt menu_complete  # Automatically highlight first element of completion menu
@@ -126,14 +150,12 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 # git completion
 zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completion.bash
 
-autoload -Uz compinit zrecompile
+autoload -Uz compinit
 
 if [[ ! -f $ZSH_COMPDUMP || -s $ZSH_COMPDUMP(#qN.mh+24) ]];then
-  # echo "Init and compil"
-  compinit -i -d $ZSH_COMPDUMP
+  compinit -d $ZSH_COMPDUMP
   zcompile $ZSH_COMPDUMP
 else
-  echo "Loaded from cache"
   compinit -C
 fi
 
