@@ -307,5 +307,5 @@ num  calls                time                       self            name
 **Shell init time: 1571 ms** (first launch)
 **Shell init time: 377 ms** (other sessions)
 
-> switching between term apps rebuild compdump, using zcompil switching between apps seems to be improved (~800ms), new sessions remains the same (370ms)
+> switching between term apps compaudit is loaded and rebuild compdump, using zcompil switching between apps loading from cache seems to be improved (~700/800ms), new sessions remains the same (370ms)
 
