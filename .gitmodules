@@ -7,18 +7,6 @@
 [submodule "plugins/zsh-completions"]
 	path = plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
-[submodule "themes/spaceship-prompt"]
-	path = themes/spaceship-prompt
-	url = https://github.com/spaceship-prompt/spaceship-prompt.git
-[submodule "themes/typewritten"]
-	path = themes/typewritten
-	url = https://github.com/reobin/typewritten.git
 [submodule "themes/agnoster-zsh-theme"]
 	path = themes/agnoster-zsh-theme
 	url = https://github.com/agnoster/agnoster-zsh-theme.git
-[submodule "plugins/zsh-nvm"]
-	path = plugins/zsh-nvm
-	url = https://github.com/lukechilds/zsh-nvm.git
-[submodule "themes/zys-zsh-theme"]
-	path = themes/zys-zsh-theme
-	url = https://github.com/ZYSzys/zys-zsh-theme.git
