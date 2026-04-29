@@ -94,30 +94,6 @@ source "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.
 # export NVM_LAZY_LOAD=true
 # source "${ZSH}/plugins/zsh-nvm/zsh-nvm.plugin.zsh"
 
-# use functions to lazyload node & nvm: https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
-
-#  virtual machine management
-nvm() {
-    unfunction $0
-    export NVM_DIR=~/.nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-    nvm "$@"
-}
-
-node() {
-    unfunction $0
-    export NVM_DIR=~/.nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-    node "$@"
-}
-
-npm() {
-    unfunction $0
-    export NVM_DIR=~/.nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-    npm "$@"
-}
-
 # Autoload user functions
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
@@ -138,7 +114,7 @@ fpath=(
 ZSH_AUTOSUGGEST_STRATEGY=(completion history)
 ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
 
-setopt menu_complete  # Automatically highlight first element of completion menu
+# setopt menu_complete  # Automatically highlight first element of completion menu
 setopt list_packed    # The completion menu takes less space
 
 # Highlights menu selection
