@@ -89,6 +89,7 @@ source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 source <(fzf --zsh)
 source "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+# use functions to lazyload node & nvm: https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
 export NVM_AUTO_USE=false    # change or install node version using .nvmrc files from projects paths
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
