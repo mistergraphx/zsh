@@ -2,9 +2,8 @@
 # use functions to lazyload node & nvm:
 # https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
 
-nvm() {
+npm() {
   unfunction $0
-  _load_nvm
-  nvm "$@"
+  nvm_load
+  npm "$@"
 }
-

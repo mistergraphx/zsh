@@ -64,10 +64,7 @@ setopt promptsubst               # allow prompt substitution like $(build_prompt
 # use `bindkey -e` to restore temporaly Emacs keybindings
 
 # Theme
-
 # Agnoster (from github original repo !oh-my-zsh)
-# ~~fix: double quote prompt break on MacOS~~
-# ~~fix: iterm don't render powerline unicode signs (force LC_LOCAL)~~
 source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 
 # Plugins
@@ -76,6 +73,9 @@ source "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 # Autoload user functions
+# https://zsh.sourceforge.io/Doc/Release/Functions.html
+# autoloaded functions = one function per file !
+# the file name 'll be the function name (using a named function inside this file is purely your convenience or a design pattern choice)
 if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
 fi
