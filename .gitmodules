@@ -10,3 +10,6 @@
 [submodule "themes/agnoster-zsh-theme"]
 	path = themes/agnoster-zsh-theme
 	url = https://github.com/agnoster/agnoster-zsh-theme.git
+[submodule "plugins/fzf"]
+	path = plugins/fzf
+	url = https://github.com/junegunn/fzf.git

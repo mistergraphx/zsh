@@ -10,10 +10,8 @@ export PATH="/Applications/MAMP/bin/php/php$PHP_VERSION/bin:$PATH"
 
 # LOCALHOST SCRIPTS
 export PATH="$HOME/Sites/bin:$PATH"
-
-# NVM
-# export PATH="$HOME/.npm-packages/bin:$PATH"
-# # NVM
-# export PATH="$NVM_BIN:$PATH"
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# Setup fzf
+# ---------
+if [[ ! "$PATH" == *$ZSH/plugins/fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$ZSH/plugins/fzf/bin"
+fi
