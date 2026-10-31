@@ -309,3 +309,45 @@ num  calls                time                       self            name
 
 > switching between term apps compaudit is loaded and rebuild compdump, using zcompil switching between apps loading from cache seems to be improved (~700/800ms), new sessions remains the same (370ms)
 
+----
+
+## Fix: compdump caching never actually worked
+
+Found while auditing main.zsh: the "rebuild once a day + zcompile" logic above never fired.
+
+- the staleness check `$ZSH_COMPDUMP(#qN.mh+24)` uses the `(#q...)` glob qualifier, which silently requires `setopt extendedglob` — without it the test always evaluates to false, so the rebuild+`zcompile` branch never ran and the dump was never compiled to `.zwc`
+- the `else` fallback called `compinit -C` without `-d $ZSH_COMPDUMP`, so it defaulted to `~/.zcompdump`/`~/.zcompcache` on every single shell start instead of the custom cache dir — explains the stray files in `~`
+- `source <(fzf --zsh)` forked the fzf binary on every start (~11ms) for output that's static per fzf version; now generated once into `$ZSH_CACHE_DIR/fzf.zsh` (+ zcompiled), regenerated only when the fzf binary changes
+- `mkdir -p "$ZSH_CACHE_DIR"` forked `mkdir` even when the dir already existed
+
+Cold run (daily rebuild, dump + fzf cache regenerated + zcompiled):
+
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1        1139.78  1139.78   97.64%    565.59   565.59   48.45%  compinit
+ 2)    1         289.18   289.18   24.77%    289.18   289.18   24.77%  compdump
+ 3)  994         263.56     0.27   22.58%    263.56     0.27   22.58%  compdef
+ 4)    2          21.45    10.72    1.84%     21.45    10.72    1.84%  compaudit
+ 5)    1          14.25    14.25    1.22%     13.55    13.55    1.16%  prompt_agnoster_setup
+ 6)    1           7.79     7.79    0.67%      7.79     7.79    0.67%  _zsh_highlight_bind_widgets
+ 7)    2           3.91     1.95    0.33%      3.91     1.95    0.33%  promptinit
+```
+
+**Shell init time: 1316 ms** (once a day, rebuild + zcompile)
+
+Warm run (dump actually compiled to `.zwc` this time, fzf cache hit):
+
+```bash
+num  calls                time                       self            name
+-----------------------------------------------------------------------------------
+ 1)    1           7.59     7.59   31.22%      7.33     7.33   30.15%  prompt_agnoster_setup
+ 2)    1           6.61     6.61   27.17%      6.61     6.61   27.17%  compinit
+ 3)    1           6.09     6.09   25.04%      6.09     6.09   25.04%  _zsh_highlight_bind_widgets
+ 4)    2           3.07     1.53   12.62%      3.07     1.53   12.62%  promptinit
+```
+
+**Shell init time: 44 ms** (vs ~75 ms before the fix, same machine/setup — `compinit` alone dropped from ~23-30 ms uncompiled to ~6-7 ms compiled)
+
+> once `.zcompdump.zwc` actually exists, `compinit -C` reads bytecode instead of re-parsing ~1000 `compdef` calls from text every time
+
