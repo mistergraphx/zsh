@@ -22,7 +22,7 @@ fi
 # fi
 # echo $ZSH_CACHE_DIR
 # Create cache dir and add to $fpath
-mkdir -p "$ZSH_CACHE_DIR"
+[[ -d "$ZSH_CACHE_DIR" ]] || mkdir -p "$ZSH_CACHE_DIR"
 (( ${fpath[(Ie)$ZSH_CACHE_DIR]} )) || fpath=("$ZSH_CACHE_DIR" $fpath)
 
 # Env (paths, etc …)
@@ -68,7 +68,15 @@ setopt promptsubst               # allow prompt substitution like $(build_prompt
 source "${ZSH}/themes/agnoster-zsh-theme/agnoster.zsh-theme"
 
 # Plugins
-source <(fzf --zsh)
+# cache fzf's generated shell code instead of forking the binary on every startup;
+# regenerate only when the fzf binary itself changes
+FZF_BIN="${ZSH}/plugins/fzf/bin/fzf"
+FZF_CACHE="${ZSH_CACHE_DIR}/fzf.zsh"
+if [[ ! -f "$FZF_CACHE" || "$FZF_BIN" -nt "$FZF_CACHE" ]]; then
+  "$FZF_BIN" --zsh > "$FZF_CACHE"
+  zcompile "$FZF_CACHE"
+fi
+source "$FZF_CACHE"
 source "${ZSH}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "${ZSH}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
@@ -109,11 +117,14 @@ zstyle ':completion:*:*:git:*' script $ZSH/plugins/git-completions/git-completio
 
 autoload -Uz compinit
 
+# the (#q...) glob qualifier below is silently ignored without this option,
+# so the dump never looked stale and never got zcompile'd (always fell through to -C)
+setopt extendedglob
 if [[ ! -f $ZSH_COMPDUMP || -s $ZSH_COMPDUMP(#qN.mh+24) ]];then
   compinit -d $ZSH_COMPDUMP
   zcompile $ZSH_COMPDUMP
 else
-  compinit -C
+  compinit -C -d $ZSH_COMPDUMP
 fi
 
 # iTerm shell integration
