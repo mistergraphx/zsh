@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+# use functions to lazyload node & nvm:
+# https://dev.to/voyeg3r/some-pearls-from-my-zshrc-282m
+
+npm() {
+  unfunction $0
+  nvm_load
+  npm "$@"
+}

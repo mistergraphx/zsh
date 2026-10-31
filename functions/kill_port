@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+# https://github.com/nikolalsvk/dotfiles/blob/master/.zsh-aliases
+# Kill a process on a specified port
+kill_port() {
+  if [ -n "$1" ]
+  then
+    lsof -ti :"$1" | xargs kill -9
+  else
+    echo "Pass in the port number."
+  fi
+}
