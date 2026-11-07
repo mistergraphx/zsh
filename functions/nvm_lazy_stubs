@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+# node/npm/nvm already have dedicated lazyload stubs (functions/node, functions/npm, functions/nvm);
+# this covers the rest of the active node version's global bin (npx, corepack, any `npm install -g ...`)
+# so a new global install doesn't need its own stub file.
+# unlike those, this one must run eagerly at shell startup (main.zsh calls it right after the
+# functions autoload block) instead of being left to the autoloader to trigger on first use.
+
+nvm_lazy_stubs() {
+  for nvm_bin_name in "${NVM_DIR:-$HOME/.nvm}"/current/bin/*(N:t); do
+    (( $+functions[$nvm_bin_name] )) || eval "${nvm_bin_name}() { unfunction \$0; nvm_load; ${nvm_bin_name} \"\$@\" }"
+  done
+}

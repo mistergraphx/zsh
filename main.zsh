@@ -87,13 +87,6 @@ if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
 fi
 
-# node/npm/nvm already have dedicated lazyload stubs above; this covers the rest
-# of the active node version's global bin (npx, corepack, any `npm install -g ...`)
-# so a new global install doesn't need its own stub file.
-for nvm_bin_name in "${NVM_DIR:-$HOME/.nvm}"/current/bin/*(N:t); do
-  (( $+functions[$nvm_bin_name] )) || eval "${nvm_bin_name}() { unfunction \$0; nvm_load; ${nvm_bin_name} \"\$@\" }"
-done
-
 # Prepend plugin paths to fpath so that custom and plugin completions take precedence,
 # then append the existing $fpath and user completions at the end.
 fpath=(
@@ -102,6 +95,10 @@ fpath=(
   $fpath
   "${ZSH}/functions"
 )
+
+# must run now, not lazily: it defines the stubs other functions get autoloaded on first use;
+# needs $fpath (above) to already contain functions/ so the autoloader can find its body
+nvm_lazy_stubs
 
 # Completion
 # https://zsh.sourceforge.io/Doc/Release/Completion-System.html
