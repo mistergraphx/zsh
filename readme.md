@@ -16,7 +16,7 @@ The full measurement log, step by step, is in [docs/benchmarks.md](docs/benchmar
 ## What made the difference
 
 1. **No framework.** Plugins are git submodules, sourced directly. Nothing else is loaded.
-2. **nvm is lazy-loaded.** Loading nvm at startup cost about 1 second. Now `node`, `npm` and `nvm` are small autoloaded functions that load nvm on first use, then replace themselves.
+2. **nvm is lazy-loaded.** Loading nvm at startup cost about 1 second. Now `node`, `npm` and `nvm` are small autoloaded functions that load nvm on first use, then replace themselves. Every other binary in the active Node version's bin directory (`npx`, corepack, global npm installs) gets the same stub, created at startup by `nvm_lazy_stubs`. A global install made after the shell starts is covered from the next start.
 3. **The completion dump is rebuilt once a day and compiled.** `compinit` re-parsing about 1,000 `compdef` calls on every start was the next bottleneck. The dump is now regenerated when older than 24 hours, then compiled to bytecode with `zcompile`. Other starts use `compinit -C` on the compiled file: about 6 ms instead of 25.
 4. **fzf's shell integration is cached.** `source <(fzf --zsh)` launched the fzf binary on every start for output that only changes with fzf itself. It is now generated once, compiled, and regenerated only when the fzf binary changes.
 5. **No needless subprocesses.** For example, the cache directory is only created when it doesn't exist yet.
@@ -31,7 +31,7 @@ The once-a-day logic first never worked. The staleness check uses a glob qualifi
 - **Plugins:** [fzf](https://github.com/junegunn/fzf), [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting), [zsh-completions](https://github.com/zsh-users/zsh-completions), git completion
 - **History:** shared between sessions, duplicates removed, 10,000 entries
 - **Directories:** `auto_cd`, directory stack (`cd -1`, `cd -2`…)
-- **Functions** (autoloaded, one file per function): `mkcd`, `kill_port`, lazy `node` / `npm` / `nvm`
+- **Functions** (autoloaded, one file per function): `mkcd`, `kill_port`, lazy `node` / `npm` / `nvm`, and `nvm_lazy_stubs` (lazy stubs for the other nvm binaries, run at startup)
 - **Aliases:** safe `rm` / `cp` / `mv`, and a few personal shortcuts
 
 ## Install
