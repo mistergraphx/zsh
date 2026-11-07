@@ -2,7 +2,7 @@
 # https://www.youtube.com/watch?v=bTLYiNvRIVI
 
 # Profiling start
-if [ $PROFILING_MODE -ne 0 ]; then
+if (( ${PROFILING_MODE:-0} )); then
   # setopt SOURCE_TRACE
   zmodload zsh/zprof
   zmodload zsh/datetime
@@ -34,7 +34,6 @@ source "${ZSH}/env.zsh"
 export HISTFILE="$ZSH_CACHE_DIR/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
-export HISTIGNORE="&:[ ]*:exit" # ignore duplicate commands, commands that begin with a space, and the 'exit' command
 setopt hist_expire_dups_first   # delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt hist_ignore_all_dups     # ignore duplicated commands history list
 setopt hist_find_no_dups
@@ -88,6 +87,13 @@ if [[ -d "${ZSH}/functions" ]]; then
   autoload -Uz ${ZSH}/functions/*(N:t)
 fi
 
+# node/npm/nvm already have dedicated lazyload stubs above; this covers the rest
+# of the active node version's global bin (npx, corepack, any `npm install -g ...`)
+# so a new global install doesn't need its own stub file.
+for nvm_bin_name in "${NVM_DIR:-$HOME/.nvm}"/current/bin/*(N:t); do
+  (( $+functions[$nvm_bin_name] )) || eval "${nvm_bin_name}() { unfunction \$0; nvm_load; ${nvm_bin_name} \"\$@\" }"
+done
+
 # Prepend plugin paths to fpath so that custom and plugin completions take precedence,
 # then append the existing $fpath and user completions at the end.
 fpath=(
@@ -136,7 +142,7 @@ fi
 source "${ZSH}/aliases.zsh"
 
 # Profiling end
-if [ $PROFILING_MODE -ne 0 ]; then
+if (( ${PROFILING_MODE:-0} )); then
   zprof
   zsh_end_time=$EPOCHREALTIME
   echo "Shell init time: $(printf "%.0f" $(( (zsh_end_time - zsh_start_time) * 1000 ))) ms"
