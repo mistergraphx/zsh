@@ -17,13 +17,9 @@ The full measurement log, step by step, is in [docs/benchmarks.md](docs/benchmar
 
 1. **No framework.** Plugins are git submodules, sourced directly. Nothing else is loaded.
 2. **nvm is lazy-loaded.** Loading nvm at startup cost about 1 second. Now `node`, `npm` and `nvm` are small autoloaded functions that load nvm on first use, then replace themselves. Every other binary in the active Node version's bin directory (`npx`, corepack, global npm installs) gets the same stub, created at startup by `nvm_lazy_stubs`. A global install made after the shell starts is covered from the next start.
-3. **The completion dump is rebuilt once a day and compiled.** `compinit` re-parsing about 1,000 `compdef` calls on every start was the next bottleneck. The dump is now regenerated when older than 24 hours, then compiled to bytecode with `zcompile`. Other starts use `compinit -C` on the compiled file: about 6 ms instead of 25.
+3. **The completion dump is rebuilt once a day and compiled.** `compinit` re-parsing about 1,000 `compdef` calls on every start was the next bottleneck. The dump is now regenerated when older than 24 hours, then compiled to bytecode with `zcompile`. Other starts use `compinit -C` on the compiled file: about 6 ms instead of 25. Careful when copying the staleness check: the `(#q…)` glob qualifier in `$ZSH_COMPDUMP(#qN.mh+24)` is silently ignored unless `setopt extendedglob` is on.
 4. **fzf's shell integration is cached.** `source <(fzf --zsh)` launched the fzf binary on every start for output that only changes with fzf itself. It is now generated once, compiled, and regenerated only when the fzf binary changes.
 5. **No needless subprocesses.** For example, the cache directory is only created when it doesn't exist yet.
-
-### A bug worth knowing
-
-The once-a-day logic first never worked. The staleness check uses a glob qualifier, `$ZSH_COMPDUMP(#qN.mh+24)`, which zsh silently ignores unless `setopt extendedglob` is on. The test was always false, so the dump was never compiled. On top of that, the fallback `compinit -C` was missing `-d $ZSH_COMPDUMP` and wrote its cache to `~` instead of the cache directory. Fixing both took startup from about 75 ms to 44 ms.
 
 ## What's included
 
